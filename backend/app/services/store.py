@@ -671,9 +671,26 @@ class CivicDataStore:
 
     def add_complaint(self, payload: ComplaintCreate) -> Complaint:
         self._check_auto_reload()
+
+        # If incoming report already exists by report_id, return existing to avoid duplicate entries
+        if payload.report_id:
+            existing = self.get_complaint(payload.report_id)
+            if existing:
+                return existing
+
         now_iso = datetime.now(timezone.utc).isoformat()
-        report_id = f"NGD-2026-{self._report_seq:05d}"
-        self._report_seq += 1
+        if payload.report_id:
+            report_id = payload.report_id
+            if report_id.startswith("NGD-2026-"):
+                try:
+                    seq = int(report_id.split("-")[-1])
+                    if seq >= self._report_seq:
+                        self._report_seq = seq + 1
+                except ValueError:
+                    pass
+        else:
+            report_id = f"NGD-2026-{self._report_seq:05d}"
+            self._report_seq += 1
 
         # Check duplicate within 50 meters for same problem category
         duplicate_report_id = None
@@ -688,7 +705,7 @@ class CivicDataStore:
                     break
 
         new_complaint = Complaint(
-            id=str(uuid.uuid4()),
+            id=payload.id or str(uuid.uuid4()),
             report_id=report_id,
             problem_type=payload.problem_type,
             confidence=payload.confidence,
@@ -700,7 +717,7 @@ class CivicDataStore:
             department=payload.department,
             description=payload.description,
             image_url=payload.image_url,
-            status="REPORTED",
+            status=payload.status or "REPORTED",
             duplicate_of=duplicate_report_id or payload.duplicate_of,
             citizen_id=payload.citizen_id,
             created_at=now_iso,

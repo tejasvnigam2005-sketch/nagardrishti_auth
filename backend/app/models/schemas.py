@@ -14,6 +14,8 @@ class Department(BaseModel):
 
 
 class ComplaintCreate(BaseModel):
+    id: Optional[str] = None
+    report_id: Optional[str] = None
     problem_type: ProblemType
     confidence: float = 0.92
     severity: SeverityLevel = "MEDIUM"
@@ -24,6 +26,7 @@ class ComplaintCreate(BaseModel):
     department: str
     description: str = ""
     image_url: str = ""
+    status: Optional[ComplaintStatus] = None
     duplicate_of: Optional[str] = None
     citizen_id: Optional[str] = None
 

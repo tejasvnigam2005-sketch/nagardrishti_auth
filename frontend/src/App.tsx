@@ -165,6 +165,13 @@ function AuthorityAppContent() {
   useEffect(() => {
     if (!authLoading && session && isAuthority) {
       loadData(true);
+
+      // Automated real-time synchronization every 10 seconds
+      const pollInterval = setInterval(() => {
+        loadData(false);
+      }, 10000);
+
+      return () => clearInterval(pollInterval);
     }
   }, [authLoading, session, isAuthority, loadData]);
 
