@@ -702,6 +702,7 @@ class CivicDataStore:
             image_url=payload.image_url,
             status="REPORTED",
             duplicate_of=duplicate_report_id or payload.duplicate_of,
+            citizen_id=payload.citizen_id,
             created_at=now_iso,
             updated_at=now_iso,
         )
