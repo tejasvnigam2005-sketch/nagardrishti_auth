@@ -579,7 +579,7 @@ class CivicDataStore:
             if target.exists():
                 try:
                     mtime = target.stat().st_mtime
-                    if mtime > self._last_mtime + 0.1:
+                    if abs(mtime - self._last_mtime) > 0.001:
                         self._load_from_storage()
                         break
                 except Exception:

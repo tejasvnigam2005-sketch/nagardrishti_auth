@@ -25,6 +25,7 @@ class ComplaintCreate(BaseModel):
     description: str = ""
     image_url: str = ""
     duplicate_of: Optional[str] = None
+    citizen_id: Optional[str] = None
 
 
 class Complaint(BaseModel):
@@ -42,6 +43,7 @@ class Complaint(BaseModel):
     image_url: str
     status: ComplaintStatus
     duplicate_of: Optional[str] = None
+    citizen_id: Optional[str] = None
     created_at: str
     updated_at: str
 
