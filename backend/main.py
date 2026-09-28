@@ -1,4 +1,9 @@
+import sys
 from pathlib import Path
+
+# Ensure backend root is on sys.path for serverless runtimes
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
 from fastapi import FastAPI, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
